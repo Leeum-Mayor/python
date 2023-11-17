@@ -22,26 +22,6 @@ class Test:
         self.tele1.power()
         assert self.tele1.__str__() == 'Power = False, Channel = 0, Volume = 0'
 
-        # Test to ensure channel_up isn't operational with power off
-        self.tele1.channel_up()
-        assert self.tele1.__str__() == 'Power = False, Channel = 0, Volume = 0'
-
-        # Test to ensure channel_down isn't operational with power off
-        self.tele1.channel_up()
-        self.tele1.channel_up()
-        self.tele1.channel_down()
-        assert self.tele1.__str__() == 'Power = False, Channel = 0, Volume = 0'
-
-        # Test to ensure volume_up isn't operational with power off
-        self.tele1.volume_up()
-        assert self.tele1.__str__() == 'Power = False, Channel = 0, Volume = 0'
-
-        # Test to ensure volume_down isn't operational with power off
-        self.tele1.volume_up()
-        self.tele1.volume_up()
-        self.tele1.volume_down()
-        assert self.tele1.__str__() == 'Power = False, Channel = 0, Volume = 0'
-
     def test_mute(self):
         # Test if volume is muted
         self.tele1.power()
@@ -53,8 +33,21 @@ class Test:
         self.tele1.mute()
         assert self.tele1.__str__() == 'Power = True, Channel = 0, Volume = 1'
 
+        # Test if volume stays muted when power is off
+        self.tele1.mute()
+        self.tele1.power()
+        assert self.tele1.__str__() == 'Power = False, Channel = 0, Volume = 0'
+
+        # Test if volume can be unmuted when power is off
+        self.tele1.mute()
+        assert self.tele1.__str__() == 'Power = False, Channel = 0, Volume = 0'
+
     def test_channel_up(self):
-        # Test if channel increases
+        # Test if channel increases when power is off
+        self.tele1.channel_up()
+        assert self.tele1.__str__() == 'Power = False, Channel = 0, Volume = 0'
+
+        # Test if channel increases when power is on
         self.tele1.power()
         self.tele1.channel_up()
         assert self.tele1.__str__() == 'Power = True, Channel = 1, Volume = 0'
@@ -66,6 +59,10 @@ class Test:
         assert self.tele1.__str__() == 'Power = True, Channel = 0, Volume = 0'
 
     def test_channel_down(self):
+        # Test if channel decreases when power is off
+        self.tele1.channel_down()
+        assert self.tele1.__str__() == 'Power = False, Channel = 0, Volume = 0'
+
         # Test if channel decreases
         self.tele1.power()
         self.tele1.channel_up()
@@ -77,6 +74,10 @@ class Test:
         assert self.tele1.__str__() == 'Power = True, Channel = 3, Volume = 0'
 
     def test_volume_up(self):
+        # Test if volume increases when power is off
+        self.tele1.volume_up()
+        assert self.tele1.__str__() == 'Power = False, Channel = 0, Volume = 0'
+
         # Test if volume increases
         self.tele1.power()
         self.tele1.volume_up()
@@ -88,12 +89,22 @@ class Test:
         assert self.tele1.__str__() == 'Power = True, Channel = 0, Volume = 2'
 
     def test_volume_down(self):
+        # Test if volume decreases when power is off
+        self.tele1.volume_down()
+        assert self.tele1.__str__() == 'Power = False, Channel = 0, Volume = 0'
+
         # Test if volume decreases
         self.tele1.power()
         self.tele1.volume_up()
+        self.tele1.volume_up()
+        self.tele1.volume_down()
+        assert self.tele1.__str__() == 'Power = True, Channel = 0, Volume = 1'
+
+        # Test is volume can be decreased when muted
+        self.tele1.mute()
         self.tele1.volume_down()
         assert self.tele1.__str__() == 'Power = True, Channel = 0, Volume = 0'
 
-        # Test if volume cannot go lower than 0
+        # Test if volume can go lower than 0
         self.tele1.volume_down()
         assert self.tele1.__str__() == 'Power = True, Channel = 0, Volume = 0'
