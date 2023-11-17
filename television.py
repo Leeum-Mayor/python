@@ -69,10 +69,12 @@ class Television:
         Turns volume down
         """
         if self.__status == True:
-            self.mute()
+            self.__muted = False
 
             if self.__volume >= 1:
                 self.__volume -= 1
+
+
 
     def __str__(self) -> str:
         """
